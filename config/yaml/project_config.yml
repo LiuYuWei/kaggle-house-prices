@@ -1,0 +1,12 @@
+project:
+  path: '' #your project develope path
+
+extract:
+  train_file: "data/original/train.csv"
+  test_file: "data/original/test.csv"
+
+transform:
+  drop_columns: ['id', 'SalePrice']
+
+load_to:
+  save_file_path: "data/preprocessing"
