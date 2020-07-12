@@ -19,7 +19,6 @@ class DataEtlService:
         self.train_label = []
         self.one_hot_encoder = None
         self.label_encoder = LabelEncoder()
-        
 
     def load_data(self):
         # read train data
@@ -28,14 +27,16 @@ class DataEtlService:
         # read test data
         self.df['test'] = pd.read_csv(self.config['extract']['test_file'])
         self.log.info("Finish load training data and testing data")
-        self.log.info("Length of training data: {}".format(len(self.df['train'])))
-        self.log.info("Length of testing data: {}".format(len(self.df['test'])))
+        self.log.info("Length of training data: {}".format(
+            len(self.df['train'])))
+        self.log.info("Length of testing data: {}".format(
+            len(self.df['test'])))
 
     def remove_feature(self):
         for table in self.df.values():
             for column in self.config['transform']['drop_columns']:
                 if column in list(table.columns):
-                    table.drop(column,axis=1)
+                    table.drop(column, axis=1, inplace=True)
                     self.log.info('Remove columns: {}'.format(column))
 
     def feature_selection(self):
@@ -51,24 +52,30 @@ class DataEtlService:
             include=["object"]).columns.values
         self.log.info("Finish select data feature.")
         self.log.info('Delete feature: {}'.format(list(to_delete.index)))
-        self.log.info('numerical_features: {}'.format(list(numerical_features)))
-        self.log.info('categorical_features: {}'.format(list(categorical_features)))
+        self.log.info('numerical_features: {}'.format(
+            list(numerical_features)))
+        self.log.info('categorical_features: {}'.format(
+            list(categorical_features)))
         return numerical_features, categorical_features
-    
+
     def get_dummies(self, categorical_features):
-        self.df['train'] = self.df['train'].where(pd.notnull(self.df['train']), None)
+        self.df['train'] = self.df['train'].where(
+            pd.notnull(self.df['train']), None)
         self.df['train'] = pd.get_dummies(self.df['train'])
-        self.df['test'] = self.df['test'].where(pd.notnull(self.df['test']), None)
+        self.df['test'] = self.df['test'].where(
+            pd.notnull(self.df['test']), None)
         self.df['test'] = pd.get_dummies(self.df['test'])
         self.log.info("Finish get dummy.")
-    
+
     def save_dataframe(self, save_file_path=None):
         if save_file_path is None:
             save_file_path = self.config['load_to']['save_file_path']
-        self.df['train'].to_csv("{}/{}".format(save_file_path, 'train.csv'), index=False)
-        self.df['test'].to_csv("{}/{}".format(save_file_path, 'test.csv'), index=False)
+        self.df['train'].to_csv(
+            "{}/{}".format(save_file_path, 'train.csv'), index=False)
+        self.df['test'].to_csv(
+            "{}/{}".format(save_file_path, 'test.csv'), index=False)
         self.log.info('Successfully save the dataframe file.')
-    
+
     def save_label(self, save_file_path=None):
         if save_file_path is None:
             save_file_path = self.config['load_to']['save_file_path']
