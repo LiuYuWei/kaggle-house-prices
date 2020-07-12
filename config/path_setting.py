@@ -10,7 +10,7 @@ class PathSetting:
     def __init__(self):
         """Initial some variable"""
         # get the project path
-        self.project_path = "C:/Users/Workspace/6-self-project/kaggle-house-prices" #os.environ['PROJECT_PATH']
+        self.project_path = os.environ['PROJECT_PATH']
 
     def path_join(self, *folder_name):
         """path_join: Join two path together.
