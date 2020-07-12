@@ -11,7 +11,7 @@ with open('LICENSE') as f:
 
 setup(
     project_name='kaggle-house-prices',
-    project_version='0.2.1',
+    project_version='0.2.2',
     description='In this project, we use machine learning to predict the regression data.',
     long_description=readme_text,
     author='Simon Liu',
