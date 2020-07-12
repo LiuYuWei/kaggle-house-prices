@@ -3,6 +3,8 @@
 # import relation package.
 import pickle
 import pandas as pd
+from sklearn.preprocessing import OneHotEncoder, LabelEncoder
+
 
 # import project package.
 from config.config_setting import ConfigSetting
@@ -15,6 +17,9 @@ class DataEtlService:
         self.log = config_setting.set_logger(["data_etl_service"])
         self.df = {}
         self.train_label = []
+        self.one_hot_encoder = None
+        self.label_encoder = LabelEncoder()
+        
 
     def load_data(self):
         # read train data
@@ -50,11 +55,18 @@ class DataEtlService:
         self.log.info('categorical_features: {}'.format(list(categorical_features)))
         return numerical_features, categorical_features
     
+    def get_dummies(self, categorical_features):
+        self.df['train'] = self.df['train'].where(pd.notnull(self.df['train']), None)
+        self.df['train'] = pd.get_dummies(self.df['train'])
+        self.df['test'] = self.df['test'].where(pd.notnull(self.df['test']), None)
+        self.df['test'] = pd.get_dummies(self.df['test'])
+        self.log.info("Finish get dummy.")
+    
     def save_dataframe(self, save_file_path=None):
         if save_file_path is None:
             save_file_path = self.config['load_to']['save_file_path']
-        self.df['train'].to_csv("{}/{}".format(save_file_path, 'train.csv'))
-        self.df['test'].to_csv("{}/{}".format(save_file_path, 'test.csv'))
+        self.df['train'].to_csv("{}/{}".format(save_file_path, 'train.csv'), index=False)
+        self.df['test'].to_csv("{}/{}".format(save_file_path, 'test.csv'), index=False)
         self.log.info('Successfully save the dataframe file.')
     
     def save_label(self, save_file_path=None):

@@ -21,14 +21,18 @@ class DataEtlApp:
 
     def extract(self):
         self.data_etl_service.load_data()
+        self.log.info('=== Finish extract the data. ===')
 
     def transform(self):
         self.data_etl_service.remove_feature()
-        self.data_etl_service.feature_selection()
+        numerical_features, categorical_features = self.data_etl_service.feature_selection()
+        self.data_etl_service.get_dummies(categorical_features)
+        self.log.info('=== Finish transform the data. ===')
 
     def load_to(self):
         self.data_etl_service.save_dataframe()
         self.data_etl_service.save_label()
+        self.log.info('=== Finish load the data to file. ===')
 
     def finish(self):
         pass
