@@ -1,10 +1,7 @@
 # kaggle-house-prices
 Kaggle competition on house prices prediction
-
-
-# service-helmet-detector
-
 In this project, we want to training house-prices regression data
+
 ## Get started
 
 <details>
