@@ -58,3 +58,10 @@ class TrainEvalService:
     def evaluate(self):
         validation_score = self.model.score(self.data['x_valid'], self.data['y_valid'])
         self.log.info("GBR score: {}".format(validation_score))
+    
+    def model_save(self, model, save_file_path=None):
+        if save_file_path is None:
+            save_file_path = self.config['load_to']['save_file_path']
+        file = open("{}/model/training_model_{}.pkl".format(save_file_path, model), 'wb')
+        pickle.dump(self.model, file)
+        file.close()
