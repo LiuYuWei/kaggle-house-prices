@@ -7,6 +7,7 @@ import pickle
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.svm import SVR
 
 
 # import project package.
@@ -55,9 +56,16 @@ class TrainEvalService:
             n_estimators=400, max_depth=5, min_samples_split=2, learning_rate=0.1, loss='ls')
         self.model.fit(self.data['x_train'], self.data['y_train'])
     
-    def evaluate(self):
-        validation_score = self.model.score(self.data['x_valid'], self.data['y_valid'])
-        self.log.info("GBR score: {}".format(validation_score))
+    def svr_training(self):
+        self.model = SVR(kernel='rbf')
+        self.model.fit(self.data['x_train'], self.data['y_train'])
+
+    def evaluate(self, model):
+        if model == 'svr':
+            validation_score = self.model.predict(self.data['x_valid'])
+        else:
+            validation_score = self.model.score(self.data['x_valid'], self.data['y_valid'])
+        self.log.info("Score: {}".format(validation_score))
     
     def model_save(self, model, save_file_path=None):
         if save_file_path is None:

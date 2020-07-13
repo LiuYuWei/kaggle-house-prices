@@ -17,7 +17,7 @@ class TrainEvalApp:
         self.read_data()
         self.train_test_split()
         self.training_model(model)
-        self.evaluate()
+        self.evaluate(model)
         self.finish(model)
 
     def read_data(self):
@@ -32,9 +32,11 @@ class TrainEvalApp:
             self.train_eval_service.linear_regression_training()
         elif model == 'gbr':
             self.train_eval_service.gbr_training()
+        elif model == 'svr':
+            self.train_eval_service.svr_training()
 
-    def evaluate(self):
-        self.train_eval_service.evaluate()
+    def evaluate(self, model):
+        self.train_eval_service.evaluate(model)
 
     def finish(self, model):
         self.train_eval_service.model_save(model)
