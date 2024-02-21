@@ -26,6 +26,7 @@ class DataEtlApp:
     def transform(self):
         self.data_etl_service.remove_feature()
         numerical_features, categorical_features = self.data_etl_service.feature_selection()
+        self.data_etl_service.fill_na()
         self.data_etl_service.get_dummies(categorical_features)
         self.log.info('=== Finish transform the data. ===')
 

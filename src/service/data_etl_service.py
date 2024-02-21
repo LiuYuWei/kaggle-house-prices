@@ -3,6 +3,7 @@
 # import relation package.
 import pickle
 import pandas as pd
+import numpy as np
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 
 
@@ -57,6 +58,14 @@ class DataEtlService:
         self.log.info('categorical_features: {}'.format(
             list(categorical_features)))
         return numerical_features, categorical_features
+    
+    def fill_na(self):
+        numeric_columns = self.df['train'].select_dtypes(include=[np.number]).columns
+
+        # 對每個數值型列使用其均值進行缺失值填充
+        for column in numeric_columns:
+            self.df['train'][column] = self.df['train'][column].fillna(self.df['train'][column].mean())
+            self.df['test'][column] = self.df['test'][column].fillna(self.df['test'][column].mean())
 
     def get_dummies(self, categorical_features):
         self.df['train'] = self.df['train'].where(

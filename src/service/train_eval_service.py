@@ -8,6 +8,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.svm import SVR
+from joblib import dump
 
 
 # import project package.
@@ -66,6 +67,8 @@ class TrainEvalService:
         else:
             validation_score = self.model.score(self.data['x_valid'], self.data['y_valid'])
         self.log.info("Score: {}".format(validation_score))
+        self.log.info("One of the example: {}".format(list(self.data['x_valid'].iloc[0])))
+        self.log.info("len: {}".format(len(self.data['x_valid'].iloc[0])))
     
     def model_save(self, model, save_file_path=None):
         if save_file_path is None:
@@ -73,3 +76,6 @@ class TrainEvalService:
         file = open("{}/model/training_model_{}.pkl".format(save_file_path, model), 'wb')
         pickle.dump(self.model, file)
         file.close()
+        # 使用 joblib 的 dump 函數直接儲存模型到指定路徑
+        model_path = "{}/model/training_model_{}.joblib".format(save_file_path, model)
+        dump(self.model, model_path)
